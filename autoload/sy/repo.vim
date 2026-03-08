@@ -161,6 +161,11 @@ function! s:handle_diff(options, exitval) abort
   if get(a:options, 'job_gen', -1) == getbufvar(a:options.bufnr, 'sy_job_gen_'.a:options.vcs, -2)
     call setbufvar(a:options.bufnr, 'sy_job_id_'.a:options.vcs, 0)
   endif
+
+  " Free heavy references so the options dict doesn't hold significant
+  " memory while waiting for Vim's garbage collector.
+  let a:options.stdoutbuf = []
+  let a:options.func = 0
 endfunction
 
 " s:check_diff_diff {{{1
